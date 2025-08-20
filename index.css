@@ -78,10 +78,8 @@ body {
     color:#fff;
     padding-bottom:10vh;
 }
-#middle h1 {
-    color:#1264BB;
-    font-size:70px;
-    text-decoration:underline;
+#middle img {
+    width: 50%;
 }
 #about {
     width:10vw;
