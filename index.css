@@ -3,7 +3,7 @@
 body {
     padding:0px;
     margin:0px;
-    background:linear-gradient(0deg,#ffffff80,#ffffff80),url("background.jpg") center center;
+    background:url("background.jpg") center center;
     background-size:cover;
     width:100vw;
     height:100vh;
