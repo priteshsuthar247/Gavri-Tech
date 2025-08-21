@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Gavri Tech</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" xintegrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <!-- Link to the separate CSS file -->
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <div id="magnify">
+        <h1 onclick="closemagnify()"><i class="fas fa-times"></i></h1>
+        <div id="img_here"></div>
+    </div>
+    <header id="header" class="animated slideInDown" style="animation-delay:1.8s;">
+        <div id="logo"><img src="logo.svg" alt=""></div>
+        <div id="navigation">
+            <a href="#bio">about</a>
+            <a href="#work">work</a>
+            <a href="#contact">contact</a>
+        </div>
+    </header>
+    <div id="top_part">
+        <div id="about" class="animated slideInLeft" style="animation-delay:2s;">
+            <h1>Where Stone Meets Art</h1>
+            <div class="social-links">
+                <a class="social animated zoomIn" style="animation-delay:2.2s;"><i class="fab fa-facebook"></i></a>
+                <a class="social animated zoomIn" style="animation-delay:2.6s;"><i class="fab fa-instagram"></i></a>
+            </div>
+            <button class="btn_one">See our work</button>
+        </div>
+        <div id="rightImage" class="animated jackInTheBox" style="animation-delay:2.2s;"></div>
+    </div>
+    
+    <div id="bio">
+        <h1>about</h1>
+        <p>
+            In 1955 we started our journey with wood working providing hand crafted solutions. As the years passed we grew bigger and started providing turnkey solutions to our clients.
+        </p>
+        <p>
+            Now, we are adding a new chapter to our business. With cutting-edge CNC technology and the same passion that guided our hands decades ago, we transform stone into engraved works of art.
+        </p>
+    </div>
+
+    <div id="work">
+        <h1>work</h1>
+        <div id="photos">
+            <img onclick="magnify($(this).attr('src'))" src="https://images.unsplash.com/photo-1547922657-b370d1687eb1?ixlib=rb-1.2.1&auto=format&fit=crop&w=700&q=80">
+            <img onclick="magnify($(this).attr('src'))" src="https://images.unsplash.com/photo-1549375463-8cbc18ca3f24?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=967&q=80">
+            <img onclick="magnify($(this).attr('src'))" src="https://images.unsplash.com/photo-1549366021-9f761d450615?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=650&q=80">
+            <img onclick="magnify($(this).attr('src'))" src="https://images.unsplash.com/photo-1549309019-a1d77aeae74f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=634&q=80">
+            <img onclick="magnify($(this).attr('src'))" src="https://images.unsplash.com/photo-1547149666-769b42053e67?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=564&q=80">
+            <img onclick="magnify($(this).attr('src'))" src="https://images.unsplash.com/photo-1547950515-e652d0f50b1b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=634&q=80">
+            <img onclick="magnify($(this).attr('src'))" src="https://images.unsplash.com/photo-1545342084-d03fe58ea023?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=633&q=80">
+        </div>
+    </div>
+
+    <div id="contact">
+        <h1>contact</h1>
+        <div class="contact-container">
+            <div class="contact-info">
+                <table>
+                    <tr>
+                        <td><i class="fas fa-phone"></i> &nbsp; +91-9227107585</td>
+                    </tr>
+                    <tr>
+                        <td><i class="fas fa-at"></i> &nbsp; bureau@gavritech.com</td>
+                    </tr>
+                    <tr>
+                        <td><i class="fas fa-map-marker-alt"></i>
+                            <div id="address">
+                                Plot No. 35, Aatmiya-2 Industrial Park,<br>
+                                Opposite Modern Company, NH-08,<br>
+                                Manglej, Karjan, Vadodara. 391243
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="social-links">
+                            <a class="social"><i class="fab fa-facebook"></i></a>
+                            <a class="social"><i class="fab fa-instagram"></i></a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="map-container">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3696.240404607588!2d73.18074417528719!3d22.116807879818882!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMjLCsDA3JzAwLjUiTiA3M8KwMTAnNjAuMCJF!5e0!3m2!1sen!2sin!4v1755726903488!5m2!1sen!2sin" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+        </div>
+    </div>
+    
+    <script src="index.js" type="text/javascript"></script>
+</body>
+</html>
