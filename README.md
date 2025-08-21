@@ -1,1 +1,0 @@
-# Gavri-Tech
