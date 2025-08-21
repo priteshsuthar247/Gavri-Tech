@@ -9,7 +9,6 @@
 }
 
 body {
-<<<<<<< HEAD
     padding:0px;
     margin:0px;
     background:url("background.jpg") center center;
@@ -258,8 +257,6 @@ body {
     border:0px;
     border-bottom:3px solid rgba(255,255,255,0.5);
     padding:8px 10px;
-=======
->>>>>>> 0479d11 (added)
     font-family: 'Poppins', sans-serif;
     padding: 0;
     margin: 0;
