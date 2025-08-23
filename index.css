@@ -160,18 +160,23 @@ header table {
     width:6%;
 }
 #photos {
-    width:100%;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 4%;
-    /* columns:3;
-    column-gap:4%; */
-    z-index:1;
-    transition:0.4s ease-in-out;
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(21vw, 1fr));
+  gap: 4%;
+  z-index: 1;
+  transition: 0.4s ease-in-out;
 }
-#photos_elements{
-    display: flex;
-    flex-direction: column;
+
+#photos_elements {
+  display: flex;
+  flex-direction: column;
+}
+
+#photos_elements img {
+  width: 100%;
+  height: auto;
+  display: block;
 }
 #photos img {
     width:100%;
@@ -285,8 +290,7 @@ button:focus {
 
 @media (max-width: 1000px){
     #photos {
-    columns:1;
-    column-gap:0%;
+    display: block;
     }
     #photos img {
         margin:2% 0px;
