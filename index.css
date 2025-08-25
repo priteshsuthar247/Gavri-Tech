@@ -225,6 +225,10 @@ header table {
     gap: 4%;
 }
 
+#socials{
+    padding: 4vh 0vw;
+}
+
 ::placeholder {
     color: var(--black);
 }
@@ -328,6 +332,7 @@ button:focus {
 
     #contact_inner {
         flex-direction: column;
+        gap:2vh;
     }
 
     iframe {
