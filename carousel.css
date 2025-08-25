@@ -214,14 +214,7 @@
 
 }
 
-
-/* Responsive Design */
-
 @media screen and (max-width: 999px){
-    
-    header{
-        padding-left: 50px;
-    }
 
     .list .item .content{
         left: 50px;
@@ -238,10 +231,6 @@
 }
 
 @media screen and (max-width: 690px){
-    header nav a{
-        font-size: 14px;
-        margin-right: 0;
-    }
 
     .list .item .content{
         top: 40%;
