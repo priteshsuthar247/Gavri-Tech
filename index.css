@@ -186,38 +186,6 @@ header table {
     width: 6%;
 }
 
-#photos {
-    width: 100%;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(21vw, 1fr));
-    gap: 4%;
-    z-index: 1;
-    transition: 0.4s ease-in-out;
-}
-
-#photos_elements {
-    display: flex;
-    flex-direction: column;
-}
-
-#photos_elements img {
-    width: 100%;
-    height: auto;
-    display: block;
-}
-
-#photos img {
-    width: 100%;
-    height: auto;
-    margin: 4.5% 0px;
-    transition: 0.4s ease-in-out;
-}
-
-#photos img:hover {
-    transform: scale(1.1);
-    cursor: pointer;
-}
-
 #bio {
     width: 92vw;
     padding: 6vh 4vw;
@@ -250,8 +218,11 @@ header table {
 
 #address {
     position: relative;
-    top: -25px;
-    left: 30px;
+}
+
+#address_section {
+    display: flex;
+    gap: 4%;
 }
 
 ::placeholder {
@@ -355,13 +326,12 @@ button:focus {
         color: var(--black);
     }
 
-    #contact_inner{
+    #contact_inner {
         flex-direction: column;
     }
 
-    iframe{
+    iframe {
         width: 92vw;
     }
-
 
 }
