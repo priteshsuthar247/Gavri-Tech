@@ -56,26 +56,38 @@
     function saveContact() {
         // 1. Define your contact details here
         const contact = {
-            name: "Your Full Name",
-            phone: "+1234567890", // Use international format
-            email: "your.email@example.com",
-            website: "https://yourportfolio.com",
-            instagram: "https://instagram.com/yourusername",
-            title: "Software Developer", // Or your profession
-            note: "Connect with me on my portfolio!"
+            firstName: "Manilal", // New field: First Name
+            middleName: "", // New field: Middle Name (optional, can be empty string)
+            lastName: "Suthar", // New field: Last Name
+            phone: "+91 9227107585", // Use international format
+            email: "bureau@gavritech.com",
+            website: "https://www.gavritech.com",
+            title: "Partner", // Profession/Title
+            company: "Gavri Tech" // New field: Company Name
         };
+
+        // Combine name components for FN property
+        const fullName = `${contact.firstName} ${contact.middleName ? contact.middleName + ' ' : ''}${contact.lastName}`.trim();
+
+        // vCard N property format: Last Name;First Name;Middle Name;Prefix;Suffix
+        const structuredName = `${contact.lastName};${contact.firstName};${contact.middleName};;`;
 
         // 2. Format the vCard string (VCF 3.0 format)
         const vcard = [
             "BEGIN:VCARD",
             "VERSION:3.0",
-            `FN:${contact.name}`,
-            `ORG:${contact.title}`,
+            // FN: Formatted Name (the full name displayed)
+            `FN:${fullName}`,
+            // N: Structured Name (used by contact apps to sort and parse)
+            `N:${structuredName}`,
+            // ORG: Company/Organization (added)
+            `ORG:${contact.company}`,
+            // TITLE: Title/Profession (kept)
+            `TITLE:${contact.title}`,
             `TEL;TYPE=WORK,VOICE:${contact.phone}`,
             `EMAIL:${contact.email}`,
             `URL:${contact.website}`,
-            `X-SOCIALPROFILE;TYPE=instagram:${contact.instagram}`,
-            `NOTE:${contact.note}`,
+            // Instagram and Note fields removed
             "END:VCARD"
         ].join("\n");
 
@@ -86,12 +98,16 @@
         const url = URL.createObjectURL(blob);
         const link = document.createElement("a");
         link.href = url;
-        link.setAttribute("download", `${contact.name.replace(" ", "_")}.vcf`);
+        // Use the full name for the file name, replacing spaces with underscores
+        link.setAttribute("download", `${fullName.replace(/\s+/g, "_")}.vcf`);
 
         // 5. Simulate click and cleanup
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
+
+        // Revoke the object URL to free up memory
+        URL.revokeObjectURL(url);
     }
 </script>
 
