@@ -11,7 +11,7 @@
 <body>
     <div class="main">
         <div class="up">
-            <button class="card1" onclick="saveContact()">
+            <button class="card1" onclick="triggerDirectIntent()">
                 <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none"
                     class="phone" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path
@@ -53,45 +53,99 @@
         window.location.href = "https://maps.app.goo.gl/QanTRt4SWQkpWVtc8"
     }
 
-    function saveContact() {
-        // 1. Define your contact details here
-        const contact = {
-            name: "Your Full Name",
-            phone: "+1234567890", // Use international format
-            email: "your.email@example.com",
-            website: "https://yourportfolio.com",
-            instagram: "https://instagram.com/yourusername",
-            title: "Software Developer", // Or your profession
-            note: "Connect with me on my portfolio!"
-        };
+    const contactData = {
+        name: "Acme Support",
+        firstName: "Acme",
+        lastName: "Support",
+        organization: "Acme Corp",
+        phone: "+15551234567",
+        email: "support@acmecorp.com",
+        website: "https://www.acmecorp.com",
+        instagram: "https://instagram.com/acmecorp",
+        title: "Customer Service Representative",
+        note: "Connect with the Acme team for support!"
+    };
 
-        // 2. Format the vCard string (VCF 3.0 format)
-        const vcard = [
+    const messageBox = document.getElementById('messageBox');
+
+    /**
+     * Helper: Create vCard string
+     */
+    function createVCard(data) {
+        return [
             "BEGIN:VCARD",
             "VERSION:3.0",
-            `FN:${contact.name}`,
-            `ORG:${contact.title}`,
-            `TEL;TYPE=WORK,VOICE:${contact.phone}`,
-            `EMAIL:${contact.email}`,
-            `URL:${contact.website}`,
-            `X-SOCIALPROFILE;TYPE=instagram:${contact.instagram}`,
-            `NOTE:${contact.note}`,
+            `N:${data.lastName};${data.firstName};;;`,
+            `FN:${data.name}`,
+            `ORG:${data.organization}`,
+            `TITLE:${data.title}`,
+            `TEL;TYPE=WORK,VOICE:${data.phone}`,
+            `EMAIL;TYPE=PREF,INTERNET:${data.email}`,
+            `URL:${data.website}`,
+            `X-SOCIALPROFILE;TYPE=instagram;x-user=${data.instagram.split('/').pop()}:${data.instagram}`,
+            `NOTE:${data.note}`,
             "END:VCARD"
         ].join("\n");
+    }
 
-        // 3. Create a Blob from the vCard data
-        const blob = new Blob([vcard], { type: "text/vcard;charset=utf-8" });
+    /**
+     * Method 1: Download VCard
+     * Dynamically creates a link and clicks it.
+     * Uses Data URI format which works well across both iOS and Android.
+     */
+    function downloadVCard() {
+        const vCardContent = createVCard(contactData);
 
-        // 4. Create a temporary link to trigger the download
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement("a");
-        link.href = url;
-        link.setAttribute("download", `${contact.name.replace(" ", "_")}.vcf`);
+        // We use Data URI here as it is often handled better by Android "Open With" intents 
+        // than Blob URLs, though both are valid.
+        const vCardDataUri = 'data:text/vcard;charset=utf-8,' + encodeURIComponent(vCardContent);
 
-        // 5. Simulate click and cleanup
+        // Create a temporary link element
+        const link = document.createElement('a');
+        link.href = vCardDataUri;
+        link.download = `${contactData.name.replace(" ", "_")}.vcf`;
+
+        // Append to body, click, and remove
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
+    }
+
+    /**
+     * Method 2: Direct Intent (Android Specific)
+     */
+    function triggerDirectIntent() {
+        const name = encodeURIComponent(contactData.name);
+        const phone = encodeURIComponent(contactData.phone);
+        const email = encodeURIComponent(contactData.email);
+        const organization = encodeURIComponent(contactData.organization);
+
+        const androidIntentUrl =
+            `intent:#Intent;` +
+            `action=android.intent.action.INSERT;` +
+            `type=vnd.android.cursor.dir/contact;` +
+            `S.name=${name};` +
+            `S.phone=${phone};` +
+            `S.email=${email};` +
+            `S.company=${organization};` +
+            `end`;
+
+        try {
+            window.location.href = androidIntentUrl;
+            showMessage("Attempting to open Android Contacts app...", "bg-blue-100 text-blue-700");
+        } catch (error) {
+            showMessage(`Error launching intent.`, "bg-red-100 text-red-700");
+        }
+    }
+
+    function showMessage(message, className) {
+        if (!messageBox) return;
+        messageBox.textContent = message;
+        messageBox.className = `mt-6 p-4 text-sm rounded-lg ${className}`;
+        messageBox.classList.remove('hidden');
+        setTimeout(() => {
+            messageBox.classList.add('hidden');
+        }, 5000);
     }
 </script>
 
