@@ -11,7 +11,7 @@
 <body>
     <div class="main">
         <div class="up">
-            <button class="card1">
+            <button class="card1" onclick="saveContact()">
                 <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none"
                     class="phone" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path
@@ -45,13 +45,54 @@
 </body>
 
 <script>
-        function redirectToPage() {
-            window.location.href = "https://www.gavritech.com";
-        }
+    function redirectToPage() {
+        window.location.href = "https://www.gavritech.com";
+    }
 
-        function redirectToMaps() {
-            window.location.href ="https://maps.app.goo.gl/QanTRt4SWQkpWVtc8"
-        }
+    function redirectToMaps() {
+        window.location.href = "https://maps.app.goo.gl/QanTRt4SWQkpWVtc8"
+    }
+
+    function saveContact() {
+        // 1. Define your contact details here
+        const contact = {
+            name: "Your Full Name",
+            phone: "+1234567890", // Use international format
+            email: "your.email@example.com",
+            website: "https://yourportfolio.com",
+            instagram: "https://instagram.com/yourusername",
+            title: "Software Developer", // Or your profession
+            note: "Connect with me on my portfolio!"
+        };
+
+        // 2. Format the vCard string (VCF 3.0 format)
+        const vcard = [
+            "BEGIN:VCARD",
+            "VERSION:3.0",
+            `FN:${contact.name}`,
+            `ORG:${contact.title}`,
+            `TEL;TYPE=WORK,VOICE:${contact.phone}`,
+            `EMAIL:${contact.email}`,
+            `URL:${contact.website}`,
+            `X-SOCIALPROFILE;TYPE=instagram:${contact.instagram}`,
+            `NOTE:${contact.note}`,
+            "END:VCARD"
+        ].join("\n");
+
+        // 3. Create a Blob from the vCard data
+        const blob = new Blob([vcard], { type: "text/vcard;charset=utf-8" });
+
+        // 4. Create a temporary link to trigger the download
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", `${contact.name.replace(" ", "_")}.vcf`);
+
+        // 5. Simulate click and cleanup
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
 </script>
 
 </html>
