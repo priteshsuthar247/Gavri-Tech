@@ -53,19 +53,19 @@
         window.location.href = "https://maps.app.goo.gl/QanTRt4SWQkpWVtc8"
     }
 
-    async function saveContact() {
-        // 1. Define details
+    function saveContact() {
+        // 1. Define your contact details here
         const contact = {
             name: "Your Full Name",
-            phone: "+1234567890",
+            phone: "+1234567890", // Use international format
             email: "your.email@example.com",
             website: "https://yourportfolio.com",
             instagram: "https://instagram.com/yourusername",
-            title: "Software Developer",
+            title: "Software Developer", // Or your profession
             note: "Connect with me on my portfolio!"
         };
 
-        // 2. Format VCF
+        // 2. Format the vCard string (VCF 3.0 format)
         const vcard = [
             "BEGIN:VCARD",
             "VERSION:3.0",
@@ -79,36 +79,16 @@
             "END:VCARD"
         ].join("\n");
 
-        // 3. Create the File object (Needed for Android sharing)
-        const filename = `${contact.name.replace(" ", "_")}.vcf`;
-        const file = new File([vcard], filename, { type: "text/vcard" });
-
-        // 4. Detect if the user is on Android
-        const isAndroid = /Android/i.test(navigator.userAgent);
-
-        // --- STRATEGY A: ANDROID (Use Web Share API) ---
-        // This forces the system drawer to open, allowing immediate import.
-        if (isAndroid && navigator.canShare && navigator.canShare({ files: [file] })) {
-            try {
-                await navigator.share({
-                    files: [file],
-                    title: 'Save Contact',
-                });
-                return; // Stop here if share worked
-            } catch (error) {
-                console.error('Error sharing:', error);
-                // If share fails, fall through to the Blob method below
-            }
-        }
-
-        // --- STRATEGY B: iOS & DESKTOP (Use Blob Download) ---
-        // You preferred this behavior for iOS, so we keep it here.
+        // 3. Create a Blob from the vCard data
         const blob = new Blob([vcard], { type: "text/vcard;charset=utf-8" });
+
+        // 4. Create a temporary link to trigger the download
         const url = URL.createObjectURL(blob);
         const link = document.createElement("a");
         link.href = url;
-        link.setAttribute("download", filename);
+        link.setAttribute("download", `${contact.name.replace(" ", "_")}.vcf`);
 
+        // 5. Simulate click and cleanup
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
