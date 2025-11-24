@@ -53,45 +53,89 @@
         window.location.href = "https://maps.app.goo.gl/QanTRt4SWQkpWVtc8"
     }
 
-    function saveContact() {
-        // 1. Define your contact details here
-        const contact = {
-            name: "Your Full Name",
-            phone: "+1234567890", // Use international format
-            email: "your.email@example.com",
-            website: "https://yourportfolio.com",
-            instagram: "https://instagram.com/yourusername",
-            title: "Software Developer", // Or your profession
-            note: "Connect with me on my portfolio!"
-        };
+    const contact = {
+        name: "Acme Support",     // Full Name
+        phone: "+15550123456",    // Phone
+        email: "help@acme.com",   // Email
+        org: "Acme Corp",         // Organization
+        title: "Support Team",    // Job Title
+        url: "https://acme.com"   // Website
+    };
 
-        // 2. Format the vCard string (VCF 3.0 format)
-        const vcard = [
+    function saveContactSmart() {
+        const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+        const status = document.getElementById('status');
+
+        // DETECT ANDROID
+        if (/android/i.test(userAgent)) {
+            status.innerText = "Launching Android Contact App...";
+
+            // Use the 'intent:' scheme to open the native app directly
+            // This bypasses the browser's download manager
+            const intentUrl = `intent:#Intent;` +
+                `action=android.intent.action.INSERT;` +
+                `type=vnd.android.cursor.dir/contact;` +
+                `S.name=${encodeURIComponent(contact.name)};` +
+                `S.phone=${encodeURIComponent(contact.phone)};` +
+                `S.email=${encodeURIComponent(contact.email)};` +
+                `S.company=${encodeURIComponent(contact.org)};` +
+                `S.job_title=${encodeURIComponent(contact.title)};` +
+                `S.website=${encodeURIComponent(contact.url)};` +
+                `end`;
+
+            window.location.href = intentUrl;
+
+            // Fallback: If the app doesn't open within 2 seconds, download vCard
+            setTimeout(() => {
+                status.innerText = "App didn't open? Downloading vCard...";
+                downloadVCardBlob();
+            }, 2500);
+        }
+
+        // DETECT iOS (iPhone/iPad)
+        else if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+            status.innerText = "Opening iOS Contacts...";
+            // iOS works best with the Blob method you had earlier
+            downloadVCardBlob();
+        }
+
+        // DESKTOP / OTHER
+        else {
+            status.innerText = "Downloading vCard file...";
+            downloadVCardBlob();
+        }
+    }
+
+    // The "Universal" vCard creator (Standard Method)
+    function downloadVCardBlob() {
+        // Standard VCF 3.0 Format
+        const vcardBody = [
             "BEGIN:VCARD",
             "VERSION:3.0",
             `FN:${contact.name}`,
-            `ORG:${contact.title}`,
+            `ORG:${contact.org}`,
+            `TITLE:${contact.title}`,
             `TEL;TYPE=WORK,VOICE:${contact.phone}`,
-            `EMAIL:${contact.email}`,
-            `URL:${contact.website}`,
-            `X-SOCIALPROFILE;TYPE=instagram:${contact.instagram}`,
-            `NOTE:${contact.note}`,
+            `EMAIL;TYPE=WORK:${contact.email}`,
+            `URL:${contact.url}`,
             "END:VCARD"
         ].join("\n");
 
-        // 3. Create a Blob from the vCard data
-        const blob = new Blob([vcard], { type: "text/vcard;charset=utf-8" });
-
-        // 4. Create a temporary link to trigger the download
+        // Create Blob (Better for iOS Safari)
+        const blob = new Blob([vcardBody], { type: "text/vcard;charset=utf-8" });
         const url = URL.createObjectURL(blob);
-        const link = document.createElement("a");
-        link.href = url;
-        link.setAttribute("download", `${contact.name.replace(" ", "_")}.vcf`);
 
-        // 5. Simulate click and cleanup
+        const link = document.createElement("a");
+        link.style.display = "none";
+        link.href = url;
+        link.download = `${contact.name.replace(/\s+/g, "_")}.vcf`;
+
         document.body.appendChild(link);
         link.click();
+
+        // Cleanup
         document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
     }
 </script>
 
