@@ -53,89 +53,60 @@
         window.location.href = "https://maps.app.goo.gl/QanTRt4SWQkpWVtc8"
     }
 
-    const contact = {
-        name: "Acme Support",     // Full Name
-        phone: "+15550123456",    // Phone
-        email: "help@acme.com",   // Email
-        org: "Acme Corp",         // Organization
-        title: "Support Team",    // Job Title
-        url: "https://acme.com"   // Website
-    };
+    async function saveContact() {
+        // 1. Define your contact details
+        const contact = {
+            name: "Your Full Name",
+            phone: "+1234567890",
+            email: "your.email@example.com",
+            website: "https://yourportfolio.com",
+            instagram: "https://instagram.com/yourusername",
+            title: "Software Developer",
+            note: "Connect with me on my portfolio!"
+        };
 
-    function saveContactSmart() {
-        const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-        const status = document.getElementById('status');
-
-        // DETECT ANDROID
-        if (/android/i.test(userAgent)) {
-            status.innerText = "Launching Android Contact App...";
-
-            // Use the 'intent:' scheme to open the native app directly
-            // This bypasses the browser's download manager
-            const intentUrl = `intent:#Intent;` +
-                `action=android.intent.action.INSERT;` +
-                `type=vnd.android.cursor.dir/contact;` +
-                `S.name=${encodeURIComponent(contact.name)};` +
-                `S.phone=${encodeURIComponent(contact.phone)};` +
-                `S.email=${encodeURIComponent(contact.email)};` +
-                `S.company=${encodeURIComponent(contact.org)};` +
-                `S.job_title=${encodeURIComponent(contact.title)};` +
-                `S.website=${encodeURIComponent(contact.url)};` +
-                `end`;
-
-            window.location.href = intentUrl;
-
-            // Fallback: If the app doesn't open within 2 seconds, download vCard
-            setTimeout(() => {
-                status.innerText = "App didn't open? Downloading vCard...";
-                downloadVCardBlob();
-            }, 2500);
-        }
-
-        // DETECT iOS (iPhone/iPad)
-        else if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
-            status.innerText = "Opening iOS Contacts...";
-            // iOS works best with the Blob method you had earlier
-            downloadVCardBlob();
-        }
-
-        // DESKTOP / OTHER
-        else {
-            status.innerText = "Downloading vCard file...";
-            downloadVCardBlob();
-        }
-    }
-
-    // The "Universal" vCard creator (Standard Method)
-    function downloadVCardBlob() {
-        // Standard VCF 3.0 Format
-        const vcardBody = [
+        // 2. Format the vCard string
+        const vcard = [
             "BEGIN:VCARD",
             "VERSION:3.0",
             `FN:${contact.name}`,
-            `ORG:${contact.org}`,
-            `TITLE:${contact.title}`,
+            `ORG:${contact.title}`,
             `TEL;TYPE=WORK,VOICE:${contact.phone}`,
-            `EMAIL;TYPE=WORK:${contact.email}`,
-            `URL:${contact.url}`,
+            `EMAIL:${contact.email}`,
+            `URL:${contact.website}`,
+            `X-SOCIALPROFILE;TYPE=instagram:${contact.instagram}`,
+            `NOTE:${contact.note}`,
             "END:VCARD"
         ].join("\n");
 
-        // Create Blob (Better for iOS Safari)
-        const blob = new Blob([vcardBody], { type: "text/vcard;charset=utf-8" });
+        // 3. Create a File object (Share API requires a File, not just a Blob)
+        const filename = `${contact.name.replace(" ", "_")}.vcf`;
+        const file = new File([vcard], filename, { type: "text/vcard" });
+
+        // 4. Attempt to use the Web Share API (Android/iOS solution)
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+            try {
+                await navigator.share({
+                    files: [file],
+                    title: 'Save Contact',
+                    text: 'Save this contact to your phone address book.'
+                });
+                return; // If share is successful, stop here
+            } catch (error) {
+                console.log('Sharing failed or was canceled', error);
+                // If user cancels or it fails, proceed to fallback download
+            }
+        }
+
+        // 5. Fallback: Standard Download (Desktop solution)
+        const blob = new Blob([vcard], { type: "text/vcard;charset=utf-8" });
         const url = URL.createObjectURL(blob);
-
         const link = document.createElement("a");
-        link.style.display = "none";
         link.href = url;
-        link.download = `${contact.name.replace(/\s+/g, "_")}.vcf`;
-
+        link.setAttribute("download", filename);
         document.body.appendChild(link);
         link.click();
-
-        // Cleanup
         document.body.removeChild(link);
-        window.URL.revokeObjectURL(url);
     }
 </script>
 
