@@ -54,7 +54,7 @@
     }
 
     async function saveContact() {
-        // 1. Define your contact details
+        // 1. Define details
         const contact = {
             name: "Your Full Name",
             phone: "+1234567890",
@@ -65,7 +65,7 @@
             note: "Connect with me on my portfolio!"
         };
 
-        // 2. Format the vCard string
+        // 2. Format VCF
         const vcard = [
             "BEGIN:VCARD",
             "VERSION:3.0",
@@ -79,31 +79,36 @@
             "END:VCARD"
         ].join("\n");
 
-        // 3. Create a File object (Share API requires a File, not just a Blob)
+        // 3. Create the File object (Needed for Android sharing)
         const filename = `${contact.name.replace(" ", "_")}.vcf`;
         const file = new File([vcard], filename, { type: "text/vcard" });
 
-        // 4. Attempt to use the Web Share API (Android/iOS solution)
-        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        // 4. Detect if the user is on Android
+        const isAndroid = /Android/i.test(navigator.userAgent);
+
+        // --- STRATEGY A: ANDROID (Use Web Share API) ---
+        // This forces the system drawer to open, allowing immediate import.
+        if (isAndroid && navigator.canShare && navigator.canShare({ files: [file] })) {
             try {
                 await navigator.share({
                     files: [file],
                     title: 'Save Contact',
-                    text: 'Save this contact to your phone address book.'
                 });
-                return; // If share is successful, stop here
+                return; // Stop here if share worked
             } catch (error) {
-                console.log('Sharing failed or was canceled', error);
-                // If user cancels or it fails, proceed to fallback download
+                console.error('Error sharing:', error);
+                // If share fails, fall through to the Blob method below
             }
         }
 
-        // 5. Fallback: Standard Download (Desktop solution)
+        // --- STRATEGY B: iOS & DESKTOP (Use Blob Download) ---
+        // You preferred this behavior for iOS, so we keep it here.
         const blob = new Blob([vcard], { type: "text/vcard;charset=utf-8" });
         const url = URL.createObjectURL(blob);
         const link = document.createElement("a");
         link.href = url;
         link.setAttribute("download", filename);
+
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
